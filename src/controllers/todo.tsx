@@ -3,7 +3,8 @@ import { Context, Hono } from "hono";
 import { z } from "zod";
 import { drizzle } from "drizzle-orm/d1";
 import { eq } from "drizzle-orm";
-import { TodoItem } from "../components";
+import { TodoPage, TodoItem } from "../components/todo";
+import { Layout } from "../components";
 import { Todo, todos } from "../schema";
 import { checkAuthMiddleware } from "../lucia";
 import { Session } from "lucia";
@@ -14,6 +15,22 @@ const ensureOwner = (s: Session, t: Todo | undefined) =>
   s.user.userId === t?.userId;
 
 app.use("*", checkAuthMiddleware);
+
+app.get("*", async(c) => {
+  const session = c.get("session");
+  const todoList = await drizzle(c.env.DB)
+      .select()
+      .from(todos)
+      .where(eq(todos.userId, session.user.userId))
+      .all();
+
+  return c.html(
+    <Layout username={session.user.githubUsername} currentPage="todo">      
+      <TodoPage todos={todoList} />
+    </Layout>
+  );
+
+})
 
 app.post(
   "/new",

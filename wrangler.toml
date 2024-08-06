@@ -1,14 +1,11 @@
-name = "hstack"
+name = "fintune"
 main= "src/index.tsx"
 compatibility_date = "2023-01-01"
 
 [site]
 bucket = "./assets"
 
-[[d1_databases]] # replace this with your own
-binding = "DB"
-database_name = "hstack-db"
-database_id = "6a765098-d238-45c4-a7fd-9d796be20b52"
-
-migrations_dir = "migrations"
-
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "fintune"
+database_id = "dcb1c4b2-d194-44bb-adc2-a1085b8c495f"

@@ -63,9 +63,9 @@ app.get("/login/github/callback", async (c) => {
   } catch (e) {
     if (e instanceof OAuthRequestError) {
       // invalid code
-      return c.text("Bad request", 400);
+      return c.text(`Bad request: ${e.message}`, 400);
     }
-    return c.text("An unknown error occurred", 500);
+    return c.text(`An unknown error occurred: ${e.message}`, 500);
   }
 });
 

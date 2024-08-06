@@ -1,10 +1,10 @@
 import { Hono } from "hono";
-import { drizzle } from "drizzle-orm/d1";
-import { todos } from "./schema";
-import { AuthControl, Layout, MainPage } from "./components";
+import { Layout } from "./components";
 import { serveStatic } from "hono/cloudflare-workers";
 import { loginController } from "./controllers/login";
 import { todoController } from "./controllers/todo";
+import { departmentController } from "./controllers/department";
+import { employeeController } from "./controllers/employee";
 import { authMiddleware } from "./lucia";
 import { eq } from "drizzle-orm";
 
@@ -20,24 +20,21 @@ app.get("/", async (c) => {
   const session = c.get("session");
   if (!session) {
     return c.html(
-      <Layout>
-        <AuthControl />
-      </Layout>
+      <Layout username="" currentPage="home"/>      
     );
   }
-  const data = await drizzle(c.env.DB)
-    .select()
-    .from(todos)
-    .where(eq(todos.userId, session.user.userId))
-    .all();
+
   return c.html(
-    <Layout>
-      <AuthControl username={session.user.githubUsername} />
-      <MainPage todos={data} />
+    <Layout username={session.user.githubUsername} currentPage="index">      
+      <div class="animate-fade-in text-2xl text-gray">
+        Click something
+      </div>
     </Layout>
   );
 });
 
 app.route("/todo", todoController);
+app.route("/department", departmentController);
+app.route("/employee", employeeController);
 
 export default app;

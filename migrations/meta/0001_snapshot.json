@@ -1,9 +1,61 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "e6c0034e-3da5-41d9-b469-93bd8c9a92b5",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "503e7b8f-5a34-4632-b5e6-3a27e354c6a5",
+  "prevId": "e6c0034e-3da5-41d9-b469-93bd8c9a92b5",
   "tables": {
+    "departments": {
+      "name": "departments",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created": {
+          "name": "created",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(current_timestamp)"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "departments_created_by_user_id_fk": {
+          "name": "departments_created_by_user_id_fk",
+          "tableFrom": "departments",
+          "tableTo": "user",
+          "columnsFrom": [
+            "created_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "user_key": {
       "name": "user_key",
       "columns": {

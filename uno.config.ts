@@ -6,6 +6,7 @@ import {
   transformerVariantGroup,
 } from "unocss";
 import { presetDaisy } from "unocss-preset-daisy";
+import presetAnimations from 'unocss-preset-animations';
 import { themes } from "./src/themes";
 
 export default defineConfig({
@@ -19,6 +20,7 @@ export default defineConfig({
     presetUno(),
     presetTypography(),
     presetIcons(),
+    presetAnimations(),
     presetDaisy({ themes, darkTheme: "black" }),
   ],
   transformers: [transformerVariantGroup()],
