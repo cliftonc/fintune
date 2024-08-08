@@ -72,7 +72,7 @@ export function DepartmentItemEdit(props: Department | null) {
 export function DepartmentPage(props: { departments: Department[] }) {
   return (
     <>    
-      <div class="w-full text-left">
+      <div class="w-1/2 text-left">
         <button hx-get="/department/create" hx-target="#departments tbody" hx-swap="beforeend" class="btn text-right mt-5 join-item">Add Department</button>      
       </div>
       <table id="departments" class="table table-zebra table-sm w-full" hx-swap="outerHTML" hx-target="closest tr">
@@ -87,6 +87,19 @@ export function DepartmentPage(props: { departments: Department[] }) {
         </tbody>
       </table>     
       <div id="alerts"></div>
+    </>
+  );
+}
+
+export function DepartmentCombo(props: { department: int | null, departments: Department[] }) {
+  return (
+    <>    
+      <select class="select select-bordered w-full max-w-xs" value={props.department} name="department" id="department-select">      
+          {props.departments.map((department) => {    
+            const selected = props.department === department.id;                    
+            return <option value={department.id} selected={selected}>{department.name}</option>
+          })}
+      </select>
     </>
   );
 }

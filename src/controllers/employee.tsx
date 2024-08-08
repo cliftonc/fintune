@@ -9,7 +9,7 @@ import { Layout } from "../components";
 import { employees, user } from "../schema";
 import { checkAuthMiddleware } from "../lucia";
 import { Session } from "lucia";
-import { errorHandler, successHandler } from "../utils/alerts";
+import { errorHandler, zodErrorHandler, successHandler } from "../utils/alerts";
 
 const app = new Hono<AuthEnv>();
 
@@ -28,7 +28,7 @@ app.post(
   zValidator(
     "form",
     zodSchema,
-    errorHandler
+    zodErrorHandler
   ),
   async (c) => {
     console.log(c.req.valid("form"))
@@ -61,7 +61,7 @@ app.put(
   zValidator(
     "form",
     zodSchema,
-    errorHandler
+    zodErrorHandler
   ),
   async (c) => {
     const session = c.get("session")

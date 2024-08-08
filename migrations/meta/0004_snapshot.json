@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "aa5d10c3-3a19-4ab9-adaf-2c60fbe12e2e",
+  "id": "c6b84824-657e-4d54-a8fa-0fdd6f65d80f",
   "prevId": "ed13aedd-19b6-4b65-bc22-ecaa8ba1ee27",
   "tables": {
     "calendars": {

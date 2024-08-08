@@ -43,22 +43,28 @@ const ThemeSelector = () => (
   </div>
 )
 
-const LeftMenu = (props: { currentPage?: string }) => (
+const LeftMenu = (props: { username?: string, currentPage?: string }) => (
   <ul class="menu pr-5 p-0">
-    <li>
-      <h2 class="menu-title">Tools</h2>
-      <ul>
-        <li><a class={props.currentPage === "todo" ? "active" : ""} href="/todo">Task List</a></li>    
-      </ul>
-    </li>
-    <li>
-      <h2 class="menu-title">Reference Data</h2>
-      <ul>
-        <li><a class={props.currentPage === "department" ? "active" : ""} href="/department">Departments</a></li>
-        <li><a class={props.currentPage === "employee" ? "active" : ""} href="/employee">Employees</a></li>    
-        <li><a class={props.currentPage === "team" ? "active" : ""} href="/team">Teams</a></li>    
-      </ul>
-    </li>
+  {props.username ? (
+    <>
+      <li>
+        <h2 class="menu-title">Tools</h2>
+        <ul>
+          <li><a class={props.currentPage === "todo" ? "active" : ""} href="/todo">Task List</a></li>    
+        </ul>
+      </li>
+      <li>
+        <h2 class="menu-title">Reference Data</h2>
+        <ul>
+          <li><a class={props.currentPage === "department" ? "active" : ""} href="/department">Departments</a></li>
+          <li><a class={props.currentPage === "employee" ? "active" : ""} href="/employee">Employees</a></li>    
+          <li><a class={props.currentPage === "team" ? "active" : ""} href="/team">Teams</a></li>    
+        </ul>
+      </li>
+    </>
+   ) : (
+    <li></li>
+   )}
   </ul>
 )
 
@@ -115,7 +121,7 @@ export function Layout(props: SiteData) {
             ${props.children}
           </div>
           <div class="w-full md:w-1/6 text-left">            
-            ${<LeftMenu {...{currentPage: props.currentPage}}/>}
+            ${<LeftMenu {...{currentPage: props.currentPage, username: props.username}}/>}
           </div>
         </div>              
       </body>

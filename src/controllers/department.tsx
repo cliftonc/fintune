@@ -9,7 +9,7 @@ import { Layout } from "../components";
 import { departments, user } from "../schema";
 import { checkAuthMiddleware } from "../lucia";
 import { Session } from "lucia";
-import { errorHandler, successHandler } from "../utils/alerts";
+import { errorHandler, zodErrorHandler, successHandler } from "../utils/alerts";
 
 const app = new Hono<AuthEnv>();
 
@@ -22,7 +22,7 @@ app.post(
     z.object({
       name: z.string().min(1).max(40),
     }),
-    errorHandler
+    zodErrorHandler
   ),
   async (c) => {
     const session = c.get("session")
@@ -35,7 +35,7 @@ app.post(
     return c.html(
       <>
         <DepartmentItem {...newDepartment} />        
-        {successHandler('Created', `Department ${newDepartment.name} created`)}
+        {successHandler('Create', `Department ${newDepartment.name} created`)}
       </>
     );
   }
@@ -48,7 +48,7 @@ app.put(
     z.object({
       name: z.string().min(1).max(40),
     }),
-    errorHandler
+    zodErrorHandler
   ),
   async (c) => {
     const session = c.get("session")
@@ -71,7 +71,16 @@ app.put(
 app.delete("/delete/:id{[0-9]+}", async (c) => {
   const id = parseInt(c.req.param().id);
   const db = drizzle(c.env.DB);  
-  await drizzle(c.env.DB).delete(departments).where(eq(departments.id, id)).run();
+  try {
+    await drizzle(c.env.DB).delete(departments).where(eq(departments.id, id)).run();
+  } catch(ex) {
+    const department = await drizzle(c.env.DB).select().from(departments).where(eq(departments.id, id));  
+    return c.html(
+      <>
+        <DepartmentItem {...department[0]} />
+        {errorHandler('Department has teams!', 'Cannot delete a department that has teams attached to it :D')}
+      </>)
+  }
   return c.html(successHandler('Deleted', `Department ${id} deleted`));
 });
 
