@@ -6,7 +6,8 @@ export function DepartmentItem(props: Department) {
   const deptId = `department-${props.id}`;
   return (        
     <tr id={deptId} class="hover" hx-target="this" hx-swap="outerHTML">
-      <td class="w-full">{props.name}</td>      
+      <td class="w-3/4">{props.name}</td>     
+      <td class="w-1/4">{props.teams}</td>      
       <td>          
         <button
           class="save btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1"
@@ -52,7 +53,7 @@ export function DepartmentItemEdit(props: Department | null) {
   }
   return (         
     <tr id={deptId} class="hover" hx-target="this" hx-swap="outerHTML">     
-      <td class="w-full">
+      <td class="w-3/4">
         <input
           name="name"
           maxlength={40}
@@ -62,7 +63,8 @@ export function DepartmentItemEdit(props: Department | null) {
           autocomplete="off"
           autofocus
           value={props?.name}
-        /></td>      
+        /></td>
+      <td class="w-1/4"></td> 
       <td>{saveButton}</td>
       <td>{cancelButton}</td>
     </tr>        
@@ -78,6 +80,7 @@ export function DepartmentPage(props: { departments: Department[] }) {
       <table id="departments" class="table table-zebra table-sm w-full" hx-swap="outerHTML" hx-target="closest tr">
         <thead>
           <th>Department Name</th>
+          <th># Teams</th>
           <th></th>
         </thead>
         <tbody>

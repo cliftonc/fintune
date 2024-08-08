@@ -6,6 +6,7 @@ import { todoController } from "./controllers/todo";
 import { departmentController } from "./controllers/department";
 import { employeeController } from "./controllers/employee";
 import { teamController } from "./controllers/team";
+import { calendarController } from "./controllers/calendar";
 import { authMiddleware } from "./lucia";
 import { eq } from "drizzle-orm";
 
@@ -42,5 +43,6 @@ app.route("/todo", todoController);
 app.route("/department", departmentController);
 app.route("/employee", employeeController);
 app.route("/team", teamController);
+app.route("/calendar", calendarController);
 
 export default app;

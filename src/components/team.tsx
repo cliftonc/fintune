@@ -84,7 +84,7 @@ export function TeamPage(props: { teams: Team[] }) {
       <table id="teams" class="table table-zebra table-sm w-full" hx-swap="outerHTML" hx-target="closest tr">
         <thead>
           <th>Team Name</th>
-          <th></th>
+          <th>Department</th>
         </thead>
         <tbody>
           {props.teams.map((team) => (
