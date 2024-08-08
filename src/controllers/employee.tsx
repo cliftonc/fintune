@@ -16,8 +16,8 @@ const app = new Hono<AuthEnv>();
 const zodSchema = z.object({
   name: z.string().min(1).max(40),
   employeeId: z.string().min(1).max(40),      
-  started: z.string().min(1).max(40),
-  finished: z.string().min(1).max(40),
+  started: z.string().min(10),
+  finished: z.string().optional(),
   active: z.preprocess(value => value === 'on', z.boolean())
 })
 
@@ -30,8 +30,7 @@ app.post(
     zodSchema,
     zodErrorHandler
   ),
-  async (c) => {
-    console.log(c.req.valid("form"))
+  async (c) => {    
     const session = c.get("session")
     const newEmployee = await drizzle(c.env.DB)
       .insert(employees)
@@ -66,6 +65,7 @@ app.put(
   async (c) => {
     const session = c.get("session")
     const id = parseInt(c.req.param().id);
+    console.log(c.req.valid("form"))
     const updatedEmployee = await drizzle(c.env.DB)
       .update(employees)
       .set({ ...c.req.valid("form"), createdBy: session.user.userId })
