@@ -80,10 +80,9 @@ export function CalendarItemEdit(props: Calendar | null) {
       </td> 
       <td class="w-1/3">
         <input
-          name="firstPeriod"
-          maxlength={40}
+          name="firstPeriod"          
           required
-          type="text"
+          type="date"
           class="input join-item input-bordered w-full"
           autocomplete="off"          
           value={props?.firstPeriod}

@@ -15,7 +15,7 @@ const app = new Hono<AuthEnv>();
 
 const zodSchema = z.object({
   name: z.string().min(1).max(40),
-  firstPeriod: z.string().min(1).max(40),
+  firstPeriod: z.string().min(1, { message: "First period is required to be set!" }),
   type: z.string().min(1).max(40)
 })
 

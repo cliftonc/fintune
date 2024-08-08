@@ -45,4 +45,24 @@ app.route("/employee", employeeController);
 app.route("/team", teamController);
 app.route("/calendar", calendarController);
 
+app.notFound((c) => {
+ const session = c.get("session");
+ return c.html(
+    <Layout username={session?.user?.githubUsername} currentPage="404">      
+      <div class="grid h-100">
+        <div class="hero min-h-fit">
+          <div class="hero-content text-center">
+            <div class="max-w-fit">
+              <h1 class="text-5xl text-error font-bold">Still haven't found what you're looking for?</h1>
+              <p class="py-6">
+                Sorry but we don't seem to have gotten around to build that yet, try something else ...
+              </p>            
+            </div>
+          </div>
+        </div>
+      </div>
+    </Layout>
+  )
+}, 404)
+
 export default app;

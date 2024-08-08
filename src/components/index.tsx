@@ -117,17 +117,17 @@ export function Layout(props: SiteData) {
           on clearAlerts set #alerts.innerHTML to ''          
         </script>
       </head>
-      <body hx-ext="debug" class="h-screen p-6 mx-auto">
-        <div class="flex md:flex-row-reverse flex-wrap">
-          <div class="w-full">
+      <body hx-ext="debug" class="w-full h-screen p-6 mx-auto">
+        <div class="flex flex-wrap">
+          <div class="md:w-full">
             ${<Navbar {...{username: props.username}}/>}
           </div>
-          <div class="w-full md:w-5/6 p-4 text-left">
-            ${props.children}
-          </div>
-          <div class="w-full md:w-1/6 text-left">            
+          <div class="md:w-1/6 text-left">            
             ${<LeftMenu {...{currentPage: props.currentPage, username: props.username}}/>}
           </div>
+          <div class="md:w-5/6 text-left">
+            ${props.children}
+          </div>                
         </div>              
       </body>
     </html> `;

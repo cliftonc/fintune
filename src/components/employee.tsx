@@ -89,7 +89,7 @@ export function EmployeeItemEdit(props: Employee) {
         />
       </td>
       <td>{saveButton}</td>
-      <td>{cancelButton}</td>
+      <td>{cancelButton}</td> 
     </tr>        
   );
 }
@@ -100,7 +100,7 @@ export function EmployeePage(props: { employees: Employee[] }) {
       <div class="w-full text-left">
         <button hx-get="/employee/create" hx-target="#employees tbody" hx-swap="beforeend" class="btn text-right mt-5 join-item">Add employee</button>              
       </div>
-      <table id="employees" class="table table-zebra table-sm w-full" hx-swap="outerHTML" hx-target="closest tr">
+      <table id="employees" class="table table-sm w-full" hx-swap="outerHTML" hx-target="closest tr">
         <thead>
           <th>Name</th>
           <th>ID</th>
