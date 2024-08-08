@@ -90,10 +90,10 @@ app.delete("/delete/:id{[0-9]+}", async (c) => {
   try {
     await c.db.delete(departments).where(eq(departments.id, id)).run();
   } catch(ex) {
-    const department = await c.db.select().from(departments).where(eq(departments.id, id));  
+    const department = await c.db.run(deptSql(id))
     return c.html(
       <>
-        <DepartmentItem {...department[0]} />
+        <DepartmentItem {...department.results[0]} />
         {errorHandler('Department has teams!', 'Cannot delete a department that has teams attached to it :D')}
       </>)
   }
