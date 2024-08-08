@@ -10,7 +10,7 @@ import { teams, departments, user } from "../schema";
 import { checkAuthMiddleware } from "../lucia";
 import { Session } from "lucia";
 import { errorHandler, zodErrorHandler, successHandler } from "../utils/alerts";
-import { index } from './search';
+import { index, removeIndex } from './search';
 
 const app = new Hono<AuthEnv>();
 
@@ -39,7 +39,7 @@ app.post(
     const department = await drizzle(c.env.DB).select().from(departments).where(eq(departments.id, newTeam.department));    
 
     await index(drizzle(c.env.DB), {
-      object_key: `team-${newTeam.id}`,
+      object_key: newTeam.id,
       type: 'team',
       org: 'infinitas',
       search_data: `${newTeam.name}`
@@ -75,7 +75,7 @@ app.put(
     const department = await drizzle(c.env.DB).select().from(departments).where(eq(departments.id, updatedTeam.department));    
 
     await index(drizzle(c.env.DB), {
-      object_key: `team-${updatedTeam.id}`,
+      object_key: updatedTeam.id,
       type: 'team',
       org: 'infinitas',
       search_data: `${updatedTeam.name}`
@@ -94,6 +94,7 @@ app.delete("/delete/:id{[0-9]+}", async (c) => {
   const id = parseInt(c.req.param().id);
   const db = drizzle(c.env.DB);  
   await drizzle(c.env.DB).delete(teams).where(eq(teams.id, id)).run();
+  await removeIndex(drizzle(c.env.DB), {object_key: id, type: 'team'})
   return c.html(successHandler('Deleted', `Team ${id} deleted`));
 });
 
@@ -111,7 +112,7 @@ app.get("/create", async (c) => {
   return c.html(<TeamItemEdit {...{teams: {id: 0, name: '', created: '', createdBy: ''}, departments: {}, departmentList}} />);  
 });
 
-app.get("/:id{[0-9]+}", async (c) => {
+app.get("/item/:id{[0-9]+}", async (c) => {
   const id = parseInt(c.req.param().id);
   const db = drizzle(c.env.DB);  
   const createdByUser = alias(user, 'createdByUser')

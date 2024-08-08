@@ -4,13 +4,13 @@ import { z } from "zod";
 import { drizzle } from "drizzle-orm/d1";
 import { eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/sqlite-core";
-import { EmployeePage, EmployeeItem, EmployeeItemEdit } from "../components/employee";
+import { EmployeePage, EmployeeItem, EmployeeItemEdit, EmployeeView } from "../components/employee";
 import { Layout } from "../components";
 import { employees, user } from "../schema";
 import { checkAuthMiddleware } from "../lucia";
 import { Session } from "lucia";
 import { errorHandler, zodErrorHandler, successHandler } from "../utils/alerts";
-import { index } from './search';
+import { index, removeIndex } from './search';
 
 const app = new Hono<AuthEnv>();
 
@@ -45,7 +45,7 @@ app.post(
       .where(eq(user.id, session.user.userId))
 
     await index(drizzle(c.env.DB), {
-      object_key: `employee-${newEmployee.id}`,
+      object_key: newEmployee.id,
       type: 'employee',
       org: 'infinitas',
       search_data: `${newEmployee.name} ${newEmployee.employeeId}`
@@ -82,7 +82,7 @@ app.put(
       .get();
 
     await index(drizzle(c.env.DB), {
-      object_key: `employee-${updatedEmployee.id}`,
+      object_key: updatedEmployee.id,
       type: 'employee',
       org: 'infinitas',
       search_data: `${updatedEmployee.name} ${updatedEmployee.employeeId}`
@@ -101,6 +101,7 @@ app.delete("/delete/:id{[0-9]+}", async (c) => {
   const id = parseInt(c.req.param().id);
   const db = drizzle(c.env.DB);  
   await drizzle(c.env.DB).delete(employees).where(eq(employees.id, id)).run();
+  await removeIndex(db, {object_key: id, type: 'employee'})
   return c.html(successHandler('Deleted', `Employee ${id} deleted`));
 });
 
@@ -126,6 +127,22 @@ app.get("/create", async (c) => {
 });
 
 app.get("/:id{[0-9]+}", async (c) => {
+  const session = c.get("session");
+  const id = parseInt(c.req.param().id);
+  const db = drizzle(c.env.DB);  
+  const createdByUser = alias(user, 'createdByUser')
+  const department = await drizzle(c.env.DB).select()
+    .from(employees)    
+    .where(eq(employees.id, id));  
+  return c.html(
+    <Layout theme={c.theme} username={session.user.githubUsername} currentPage="employee">      
+      <EmployeeView {...department[0]} /> 
+    </Layout>
+  )
+});
+
+
+app.get("/item/:id{[0-9]+}", async (c) => {
   const id = parseInt(c.req.param().id);
   const db = drizzle(c.env.DB);  
   const createdByUser = alias(user, 'createdByUser')

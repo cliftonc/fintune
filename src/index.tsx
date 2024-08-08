@@ -22,7 +22,7 @@ app.route("/", loginController);
 app.use("*", async (c, next) => {
   const theme = getCookie(c, 'theme') || 'lofi'
   console.log('theme', theme)
-  c.theme = theme
+  c.theme = theme  
   await next()
 })
 

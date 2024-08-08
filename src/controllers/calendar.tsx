@@ -97,7 +97,7 @@ app.get("/create", async (c) => {
   return c.html(<CalendarItemEdit {...{id: 0, name: '', created: '', createdBy: ''}} />);  
 });
 
-app.get("/:id{[0-9]+}", async (c) => {
+app.get("/item/:id{[0-9]+}", async (c) => {
   const id = parseInt(c.req.param().id);
   const db = drizzle(c.env.DB);  
   const createdByUser = alias(user, 'createdByUser')

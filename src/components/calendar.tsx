@@ -44,7 +44,7 @@ export function CalendarItemEdit(props: Calendar | null) {
 
   let cancelButton
   if (props?.id) {
-     cancelButton = <button id="undo" class="btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1" hx-trigger="click, keyup[keyCode==27] from:body" hx-get={`/calendar/${props.id}`}>
+     cancelButton = <button id="undo" class="btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1" hx-trigger="click, keyup[keyCode==27] from:body" hx-get={`/calendar/item/${props.id}`}>
           <div class="i-mdi-undo text-xl"></div>
         </button>           
   } else {

@@ -14,9 +14,15 @@ import { errorHandler, zodErrorHandler, successHandler } from "../utils/alerts";
 
 const app = new Hono<AuthEnv>();
 
+
+const removeIndex = async (db, {object_key, type}) => {
+  // Always delete to update
+  await db.run(sql`delete from search_fts where object_key = ${object_key} and type = ${type}` )  
+}
+
 const index = async (db, {object_key, type, org, search_data}) => {
   // Always delete to update
-  await db.run(sql`delete from search_fts where object_key = ${object_key}`)
+  await removeIndex(db, {object_key, type});
   const result = await db.run(sql`insert into search_fts 
       (object_key, type, org, search_data) 
       values(${object_key}, ${type}, ${org}, ${search_data})`)     
@@ -31,7 +37,7 @@ app.use("*", async (c, next) => {
 
 app.get("/:search", async (c) => {
   const search = c.req.param().search;
-  const sanitizedQuery = search.replaceAll('"', '""');
+  const sanitizedQuery = search.replaceAll('"', '""').replaceAll('*', '') + '*';
 
   const searchSql = sql`
       SELECT 
@@ -44,12 +50,21 @@ app.get("/:search", async (c) => {
       ORDER BY rank
     `
   const res = await c.db.run(searchSql);
-  return c.html(<h1>{res.results.map((r) => <div>{r.type} - {r.search_data}</div>)}</h1>);  
+
+  return c.html(
+    <div class="flex flex-wrap gap-2">
+      {res.results.map((r) => (
+      <div  _={`on click go to url "/${r.type}/${r.object_key}"`} class="card card-compact bg-base-100 w-96 shadow-xl">
+        <div class="card-body bg-primary">
+          <h2 class="card-title">{r.search_data}</h2>
+          <p>{r.type}</p>          
+        </div>
+      </div>))}
+    </div>);  
 });
 
 app.get("/", async(c) => {
   const session = c.get("session");
-  
   return c.html(
     <Layout theme={c.theme} username={session.user.githubUsername} currentPage="department">      
       <h1>Search!</h1>
@@ -57,4 +72,4 @@ app.get("/", async(c) => {
   );
 })
 
-export { app as searchController, index };
+export { app as searchController, index, removeIndex };

@@ -2,15 +2,44 @@ import { html } from "hono/html";
 import { Employee } from "../schema";
 import { themes } from "../themes";
 
+export function EmployeeView(props: Employee) { 
+  const empId = `employee-${props.id}`;
+  return <article>
+      <a href="/employee" class="link">All employees</a> | <span>{props.name}</span>          
+      <h1 class="text-2xl">{props.name}</h1>
+      <table id="employees" class="flex-none hover table table-zebra table-sm w-full text-left" hx-swap="outerHTML" hx-target="closest tr">
+        <thead>
+            <th>Name</th>
+            <th>ID</th>
+            <th>Active</th>
+            <th>Started</th>
+            <th>Finished</th>          
+            <th></th>
+        </thead>
+        <tbody>        
+          <EmployeeItem {...props} />
+        </tbody>      
+      </table>
+    </article>
+}
+
 export function EmployeeItem(props: Employee) { 
-  const deptId = `employee-${props.id}`;
+  const empId = `employee-${props.id}`;
   return (        
-    <tr id={deptId} class="hover" hx-target="this" hx-swap="outerHTML">
+    <tr id={empId} class="hover" hx-target="this" hx-swap="outerHTML" >
       <td class="w-1/4">{props.name}</td>      
       <td class="w-1/4">{props.employeeId}</td>
       <td class="w-1/8">{props.active ? 'Yes' : 'No'}</td>
       <td class="w-1/6">{props.started}</td>
       <td class="w-1/6">{props.finished}</td>      
+      <td>
+        <button
+          class="view btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1"
+          _={`on click go to url "/employee/${props.id}"`}
+        >
+          <div class="i-mdi-eye text-xl"></div>
+        </button>          
+      </td>   
       <td class="w-1">          
         <button
           class="save btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1"
@@ -19,20 +48,22 @@ export function EmployeeItem(props: Employee) {
         > 
           <div class="i-mdi-edit text-xl"></div>
         </button>
-      </td><td>
+      </td>
+      <td>
         <button
           class="delete btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1"
           hx-delete={`/employee/delete/${props.id}`}
         >
           <div class="i-mdi-trash text-xl"></div>
         </button>          
-      </td>      
+      </td>   
+        
     </tr>  
   );
 }
 
 export function EmployeeItemEdit(props: Employee) {   
-  const deptId = props.id ? `employee-${props.id}` : 'employee-new';
+  const empId = props.id ? `employee-${props.id}` : 'employee-new';
   let saveButton
   if (props.id) {
     saveButton = <button class="save btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1" hx-trigger="click, keyup[keyCode==13] from:body" hx-include="closest tr" hx-put={`/employee/${props.id}`}>
@@ -46,7 +77,7 @@ export function EmployeeItemEdit(props: Employee) {
 
   let cancelButton
   if (props.id) {
-     cancelButton = <button id="undo" class="btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1" hx-trigger="click, keyup[keyCode==27] from:body" hx-get={`/employee/${props.id}`}>
+     cancelButton = <button id="undo" class="btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1" hx-trigger="click, keyup[keyCode==27] from:body" hx-get={`/employee/item/${props.id}`}>
           <div class="i-mdi-undo text-xl"></div>
         </button>           
   } else {
@@ -55,7 +86,7 @@ export function EmployeeItemEdit(props: Employee) {
         </button>
   }
   return (         
-    <tr id={deptId} class="hover p-0 border-1" hx-target="this" hx-swap="outerHTML">     
+    <tr id={empId} class="hover p-0 border-1" hx-target="this" hx-swap="outerHTML">     
       <td class="w-1/4">
         <input name="name" maxlength={40} required type="text"
           class="input join-item input-bordered w-full"

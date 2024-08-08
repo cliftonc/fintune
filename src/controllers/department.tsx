@@ -10,7 +10,7 @@ import { departments, teams, user } from "../schema";
 import { checkAuthMiddleware } from "../lucia";
 import { Session } from "lucia";
 import { errorHandler, zodErrorHandler, successHandler } from "../utils/alerts";
-import { index } from './search';
+import { index, removeIndex } from './search';
 
 const app = new Hono<AuthEnv>();
 
@@ -48,7 +48,7 @@ app.post(
       .get();      
     const department = await c.db.run(deptSql(newDepartment.id))
     await index(c.db, {
-      object_key: `department-${newDepartment.id}`,
+      object_key: newDepartment.id,
       type: 'department',
       org: 'infinitas',
       search_data: newDepartment.name
@@ -83,7 +83,7 @@ app.put(
       .get();
     const department = await c.db.run(deptSql(updatedDepartment.id))
     await index(c.db, {
-      object_key: `department-${updatedDepartment.id}`,
+      object_key: updatedDepartment.id,
       type: 'department',
       org: 'infinitas',
       search_data: updatedDepartment.name
@@ -110,6 +110,7 @@ app.delete("/delete/:id{[0-9]+}", async (c) => {
         {errorHandler('Department has teams!', 'Cannot delete a department that has teams attached to it :D')}
       </>)
   }
+  await removeIndex(c.db, {object_key: id, type: 'department'})
   return c.html(successHandler('Deleted', `Department ${id} deleted`));
 });
 
@@ -124,7 +125,7 @@ app.get("/create", async (c) => {
   return c.html(<DepartmentItemEdit {...{id: 0, name: '', created: '', createdBy: ''}} />);  
 });
 
-app.get("/:id{[0-9]+}", async (c) => {
+app.get("/item/:id{[0-9]+}", async (c) => {
   const id = parseInt(c.req.param().id);
   const db = c.db;   
   const department = await db.run(deptSql(id))

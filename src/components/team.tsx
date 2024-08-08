@@ -44,7 +44,7 @@ export function TeamItemEdit(props: Team | null) {
 
   let cancelButton
   if (props?.teams?.id) {
-     cancelButton = <button id="undo" class="btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1" hx-trigger="click, keyup[keyCode==27] from:body" hx-get={`/team/${props.teams.id}`}>
+     cancelButton = <button id="undo" class="btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1" hx-trigger="click, keyup[keyCode==27] from:body" hx-get={`/team/item/${props.teams.id}`}>
           <div class="i-mdi-undo text-xl"></div>
         </button>           
   } else {

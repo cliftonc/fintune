@@ -102,11 +102,14 @@ export function Layout(props: SiteData) {
           on setTheme
             set cookies['theme'] to event.detail.theme
             htmx.find('html').setAttribute('data-theme', event.detail.theme)
-            log event
+            reload() the location of the window
           end
-          on doSearch                                 
-            fetch \`/search/\$\{searchFor}\` put it into #main-content
-          end
+          on doSearch              
+            if searchFor then 
+                fetch \`/search/\$\{searchFor}\` put it into #main-content
+            else
+                reload() the location of the window                      
+            end
         </script>
       </head>
       <body hx-ext="debug">
@@ -125,7 +128,7 @@ export function Layout(props: SiteData) {
                 </div>  
                 <div class="ml-5 mt-1">
                   <label class="input input-sm flex items-center">
-                    <input type="text" class="input grow bg-none" placeholder="Search" 
+                    <input id="search-input" type="text" class="input grow bg-none" placeholder="Search" 
                       _="on keyup
                          if the event's key is 'Escape'
                            set my value to ''
