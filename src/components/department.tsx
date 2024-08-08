@@ -53,7 +53,7 @@ export function DepartmentItemEdit(props: Department | null) {
   }
   return (         
     <tr id={deptId} class="hover" hx-target="this" hx-swap="outerHTML">     
-      <td class="w-3/4">
+      <td>
         <input
           name="name"
           maxlength={40}
@@ -64,7 +64,7 @@ export function DepartmentItemEdit(props: Department | null) {
           autofocus
           value={props?.name}
         /></td>
-      <td class="w-1/4"></td> 
+      <td></td> 
       <td>{saveButton}</td>
       <td>{cancelButton}</td>
     </tr>        
@@ -73,11 +73,11 @@ export function DepartmentItemEdit(props: Department | null) {
 
 export function DepartmentPage(props: { departments: Department[] }) {
   return (
-    <>    
-      <div class="w-1/2 text-left">
+    <div>    
+      <div class="text-left">
         <button hx-get="/department/create" hx-target="#departments tbody" hx-swap="beforeend" class="btn text-right mt-5 join-item">Add Department</button>      
       </div>
-      <table id="departments" class="table table-zebra table-sm w-full" hx-swap="outerHTML" hx-target="closest tr">
+      <table id="departments" class="table table-zebra table-auto table-sm w-full text-left" hx-swap="outerHTML" hx-target="closest tr">
         <thead>
           <th>Department Name</th>
           <th># Teams</th>
@@ -90,7 +90,7 @@ export function DepartmentPage(props: { departments: Department[] }) {
         </tbody>
       </table>     
       <div id="alerts"></div>
-    </>
+    </div>
   );
 }
 

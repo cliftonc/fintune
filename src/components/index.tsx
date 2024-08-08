@@ -9,22 +9,9 @@ interface SiteData {
 }
 
 const ThemeSelector = () => (
-  <div class="dropdown ml-1">
-    <label tabindex={0} class="btn btn-ghost btn-circle">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path 
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M4 6h16M4 12h16M4 18h7"
-        />
-      </svg>
+  <div class="dropdown">
+    <label tabindex={0}>
+      Theme
     </label>
     <ul
       tabindex={0}
@@ -43,8 +30,22 @@ const ThemeSelector = () => (
   </div>
 )
 
+const LoginBar = (props: { username?: string }) => (    
+  <div class="flex-none gap-0">
+    {props.username ? (            
+      <a class="normal-case" href="/logout">
+        Logout
+      </a>              
+    ) : (
+      <a class="btn normal-case" href="/login/github">
+        Sign in with GitHub
+      </a>
+    )}
+  </div>  
+);
+
 const LeftMenu = (props: { username?: string, currentPage?: string }) => (
-  <ul class="menu pr-5 p-0">
+  <ul class="menu">
   {props.username ? (
     <>
       <li>
@@ -66,36 +67,19 @@ const LeftMenu = (props: { username?: string, currentPage?: string }) => (
           <li><a class={props.currentPage === "rates" ? "active" : ""} href="/rate">Rates</a></li>
         </ul>
       </li>
+      <li>
+        <h2 class="menu-title">Settings</h2>
+        <ul>
+          <li><ThemeSelector /></li>
+          <li><LoginBar {...{username: props.username}} /></li>
+        </ul>
+      </li>
     </>
    ) : (
-    <li></li>
+    <li><LoginBar /></li>
    )}
   </ul>
 )
-
-const Navbar = (props: { username?: string }) => (
-  <div class="navbar flex-col sm:flex-row gap-2">
-    <div class="flex-1">      
-      <h1 class="text-3xl font-bold"><a href="/">fintune</a></h1>        
-      <ThemeSelector />
-    </div>        
-    
-    <div class="flex-none gap-2">
-      {props.username ? (
-        <>
-          <span>{props.username}</span>
-          <a class="btn normal-case" href="/logout">
-            Logout
-          </a>
-        </>
-      ) : (
-        <a class="btn normal-case" href="/login/github">
-          Sign in with GitHub
-        </a>
-      )}
-    </div>   
-  </div>
-);
 
 export function Layout(props: SiteData) {  
   console.log(props)
@@ -123,18 +107,32 @@ export function Layout(props: SiteData) {
           end
         </script>
       </head>
-      <body hx-ext="debug" class="w-full h-screen p-6 mx-auto">
-        <div class="flex flex-wrap">
-          <div class="md:w-full">
-            ${<Navbar {...{username: props.username}}/>}
+      <body hx-ext="debug">
+        <div>          
+          <div class="min-w-screen flex flex-col">
+            <div class="flex flex-grid items-left p-4">                            
+              <div class="flex flex-row">
+                <button _="on click toggle .hidden on #navbar-default" data-collapse-toggle="navbar-default" type="button" class="inline-flex mr-5 items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
+                    <span class="sr-only">Open main menu</span>
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+                    </svg>
+                </button>
+                <div class="flex-1">
+                  <h1 class="text-3xl font-bold"><a href="/">fintune</a></h1>           
+                </div>  
+              </div>
+            </div>
+            <div class="flex flex-row">
+              <div class=" bg-base-200 md:w-content whitespace-nowrap hidden md:block sm:bg-grey ml-2 mr-2 pl-0 pr-4 rounded-box" id="navbar-default">          
+                  ${<LeftMenu {...{currentPage: props.currentPage, username: props.username}}/>}
+              </div>       
+              <div class="w-full p-2">
+                ${props.children}
+              </div>
+            </div>
           </div>
-          <div class="md:w-1/6 text-left">            
-            ${<LeftMenu {...{currentPage: props.currentPage, username: props.username}}/>}
-          </div>
-          <div class="md:w-5/6 text-left">
-            ${props.children}
-          </div>                
-        </div>              
+        </div>                     
       </body>
     </html> `;
 }
