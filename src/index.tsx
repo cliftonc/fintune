@@ -33,7 +33,7 @@ app.get("/", async (c) => {
   return c.html(
     <Layout username={session.user.githubUsername} currentPage="index">      
       <div class="animate-fade-in text-2xl text-gray">        
-        Click something!
+        Snazzy dashboard coming soon
       </div>
     </Layout>
   );

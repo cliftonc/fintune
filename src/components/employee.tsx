@@ -77,19 +77,19 @@ export function EmployeeItemEdit(props: Employee) {
         />
       </td>
       <td class="w-1/6">
-        <input name="started" maxlength={20} required type="started"
+        <input name="started" maxlength={20} required type="date"
           class="input join-item input-bordered w-full"
           autocomplete="off" value={props.started}
         />
       </td>
       <td class="w-1/6">
-        <input name="finished" maxlength={20} required type="finished"
+        <input name="finished" maxlength={20} required type="date"
           class="input join-item input-bordered w-full"
           autocomplete="off" value={props.finished || ''}
         />
       </td>
       <td>{saveButton}</td>
-      <td>{cancelButton}</td>      
+      <td>{cancelButton}</td>
     </tr>        
   );
 }

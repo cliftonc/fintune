@@ -48,9 +48,11 @@ const LeftMenu = (props: { username?: string, currentPage?: string }) => (
   {props.username ? (
     <>
       <li>
-        <h2 class="menu-title">Tools</h2>
+        <h2 class="menu-title">Planning</h2>
         <ul>
-          <li><a class={props.currentPage === "todo" ? "active" : ""} href="/todo">Task List</a></li>    
+          <li><a class={props.currentPage === "index" ? "active" : ""} href="/plans">Dashboard</a></li>
+          <li><a class={props.currentPage === "models" ? "active" : ""} href="/models">Models</a></li>
+          <li><a class={props.currentPage === "scenarios" ? "active" : ""} href="/plans">Scenarios</a></li>
         </ul>
       </li>
       <li>
@@ -60,6 +62,8 @@ const LeftMenu = (props: { username?: string, currentPage?: string }) => (
           <li><a class={props.currentPage === "team" ? "active" : ""} href="/team">Teams</a></li>    
           <li><a class={props.currentPage === "employee" ? "active" : ""} href="/employee">Employees</a></li>
           <li><a class={props.currentPage === "calendar" ? "active" : ""} href="/calendar">Calendars</a></li>
+          <li><a class={props.currentPage === "period" ? "active" : ""} href="/period">Periods</a></li>
+          <li><a class={props.currentPage === "rates" ? "active" : ""} href="/rate">Rates</a></li>
         </ul>
       </li>
     </>
