@@ -81,8 +81,7 @@ const LeftMenu = (props: { username?: string, currentPage?: string }) => (
   </ul>
 )
 
-export function Layout(props: SiteData) {  
-  console.log(props)
+export function Layout(props: SiteData) {    
   return html`<!DOCTYPE html>
     <html lang="en" data-theme="${props.theme}">
       <head>
@@ -105,12 +104,15 @@ export function Layout(props: SiteData) {
             htmx.find('html').setAttribute('data-theme', event.detail.theme)
             log event
           end
+          on doSearch                                 
+            fetch \`/search/\$\{searchFor}\` put it into #main-content
+          end
         </script>
       </head>
       <body hx-ext="debug">
         <div>          
           <div class="min-w-screen flex flex-col">
-            <div class="flex flex-grid items-left p-4">                            
+            <div class="flex flex-grid p-4">                            
               <div class="flex flex-row">
                 <button _="on click toggle .hidden on #navbar-default" data-collapse-toggle="navbar-default" type="button" class="inline-flex mr-5 items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
                     <span class="sr-only">Open main menu</span>
@@ -118,16 +120,40 @@ export function Layout(props: SiteData) {
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
                     </svg>
                 </button>
-                <div class="flex-1">
-                  <h1 class="text-3xl font-bold"><a href="/">fintune</a></h1>           
+                <div>
+                  <h1 class="text-3xl font-bold"><a href="/">fintune</a></h1>                          
                 </div>  
+                <div class="ml-5 mt-1">
+                  <label class="input input-sm flex items-center">
+                    <input type="text" class="input grow bg-none" placeholder="Search" 
+                      _="on keyup
+                         if the event's key is 'Escape'
+                           set my value to ''
+                           trigger keyup
+                         else if the event's key is 'Enter'
+                           set global searchFor to my value
+                           trigger doSearch()
+                         end "
+                    />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 16 16"
+                      fill="currentColor"
+                      class="h-4 w-4 opacity-70">
+                      <path
+                        fill-rule="evenodd"
+                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                        clip-rule="evenodd" />
+                    </svg>                  
+                  </label>
+                </div>
               </div>
             </div>
             <div class="flex flex-row">
               <div class=" bg-base-200 md:w-content whitespace-nowrap hidden md:block sm:bg-grey ml-2 mr-2 pl-0 pr-4 rounded-box" id="navbar-default">          
                   ${<LeftMenu {...{currentPage: props.currentPage, username: props.username}}/>}
               </div>       
-              <div class="w-full p-2">
+              <div id="main-content" class="w-full p-2">
                 ${props.children}
               </div>
             </div>

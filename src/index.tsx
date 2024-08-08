@@ -8,6 +8,7 @@ import { departmentController } from "./controllers/department";
 import { employeeController } from "./controllers/employee";
 import { teamController } from "./controllers/team";
 import { calendarController } from "./controllers/calendar";
+import { searchController } from "./controllers/search";
 import { authMiddleware } from "./lucia";
 import { eq } from "drizzle-orm";
 
@@ -115,6 +116,7 @@ app.route("/department", departmentController);
 app.route("/employee", employeeController);
 app.route("/team", teamController);
 app.route("/calendar", calendarController);
+app.route("/search", searchController);
 
 app.notFound((c) => {
  const session = c.get("session");

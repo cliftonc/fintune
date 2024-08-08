@@ -10,6 +10,7 @@ import { departments, teams, user } from "../schema";
 import { checkAuthMiddleware } from "../lucia";
 import { Session } from "lucia";
 import { errorHandler, zodErrorHandler, successHandler } from "../utils/alerts";
+import { index } from './search';
 
 const app = new Hono<AuthEnv>();
 
@@ -45,7 +46,13 @@ app.post(
       .values({ ...c.req.valid("form"), createdBy: session.user.userId })
       .returning()
       .get();      
-      const department = await c.db.run(deptSql(newDepartment.id))
+    const department = await c.db.run(deptSql(newDepartment.id))
+    await index(c.db, {
+      object_key: `department-${newDepartment.id}`,
+      type: 'department',
+      org: 'infinitas',
+      search_data: newDepartment.name
+    });
     c.header('HX-Trigger','clearAlerts');
     return c.html(
       <>

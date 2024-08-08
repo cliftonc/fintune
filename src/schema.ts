@@ -4,7 +4,7 @@ import { blob, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 /**
  * Calendars
  */
- export const calendars = sqliteTable("calendars", {
+export const calendars = sqliteTable("calendars", {
   id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
   type: text("type", { enum: ["quarter", "month", "week"] }).notNull().default("month"),

@@ -10,6 +10,7 @@ import { employees, user } from "../schema";
 import { checkAuthMiddleware } from "../lucia";
 import { Session } from "lucia";
 import { errorHandler, zodErrorHandler, successHandler } from "../utils/alerts";
+import { index } from './search';
 
 const app = new Hono<AuthEnv>();
 
@@ -42,6 +43,13 @@ app.post(
       .select()
       .from(user)
       .where(eq(user.id, session.user.userId))
+
+    await index(drizzle(c.env.DB), {
+      object_key: `employee-${newEmployee.id}`,
+      type: 'employee',
+      org: 'infinitas',
+      search_data: newEmployee.name
+    });
 
     const returnEmployee = {
       ...newEmployee,      
