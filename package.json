@@ -3,6 +3,7 @@
     "dev": "concurrently pnpm:dev:*",
     "dev:uno": "unocss --watch",
     "dev:wk": "wrangler dev",
+    "build": "unocss",
     "release": "unocss && wrangler deploy --minify",
     "d1:list": "wrangler d1 migrations list DB --remote",
     "d1:apply": "wrangler d1 migrations apply DB --remote",
