@@ -10,6 +10,7 @@ import { teams, departments, user } from "../schema";
 import { checkAuthMiddleware } from "../lucia";
 import { Session } from "lucia";
 import { errorHandler, zodErrorHandler, successHandler } from "../utils/alerts";
+import { index } from './search';
 
 const app = new Hono<AuthEnv>();
 
@@ -36,6 +37,13 @@ app.post(
       .get();
 
     const department = await drizzle(c.env.DB).select().from(departments).where(eq(departments.id, newTeam.department));    
+
+    await index(drizzle(c.env.DB), {
+      object_key: `team-${newTeam.id}`,
+      type: 'team',
+      org: 'infinitas',
+      search_data: `${newTeam.name}`
+    });
 
     c.header('HX-Trigger','clearAlerts');
     return c.html(
@@ -65,6 +73,13 @@ app.put(
       .get();
 
     const department = await drizzle(c.env.DB).select().from(departments).where(eq(departments.id, updatedTeam.department));    
+
+    await index(drizzle(c.env.DB), {
+      object_key: `team-${updatedTeam.id}`,
+      type: 'team',
+      org: 'infinitas',
+      search_data: `${updatedTeam.name}`
+    });
 
     c.header('HX-Trigger','clearAlerts');
     return c.html(

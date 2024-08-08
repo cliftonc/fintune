@@ -15,9 +15,11 @@ import { errorHandler, zodErrorHandler, successHandler } from "../utils/alerts";
 const app = new Hono<AuthEnv>();
 
 const index = async (db, {object_key, type, org, search_data}) => {
+  // Always delete to update
+  await db.run(sql`delete from search_fts where object_key = ${object_key}`)
   const result = await db.run(sql`insert into search_fts 
-    (object_key, type, org, search_data) 
-    values(${object_key}, ${type}, ${org}, ${search_data})`)   
+      (object_key, type, org, search_data) 
+      values(${object_key}, ${type}, ${org}, ${search_data})`)     
   return;
 }
 

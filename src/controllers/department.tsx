@@ -82,6 +82,12 @@ app.put(
       .returning()
       .get();
     const department = await c.db.run(deptSql(updatedDepartment.id))
+    await index(c.db, {
+      object_key: `department-${updatedDepartment.id}`,
+      type: 'department',
+      org: 'infinitas',
+      search_data: updatedDepartment.name
+    });
     c.header('HX-Trigger','clearAlerts');
     return c.html(
       <>

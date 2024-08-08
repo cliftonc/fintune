@@ -48,7 +48,7 @@ app.post(
       object_key: `employee-${newEmployee.id}`,
       type: 'employee',
       org: 'infinitas',
-      search_data: newEmployee.name
+      search_data: `${newEmployee.name} ${newEmployee.employeeId}`
     });
 
     const returnEmployee = {
@@ -80,6 +80,14 @@ app.put(
       .where(eq(employees.id, id))
       .returning()
       .get();
+
+    await index(drizzle(c.env.DB), {
+      object_key: `employee-${updatedEmployee.id}`,
+      type: 'employee',
+      org: 'infinitas',
+      search_data: `${updatedEmployee.name} ${updatedEmployee.employeeId}`
+    });
+
     c.header('HX-Trigger','clearAlerts');
     return c.html(
       <>
