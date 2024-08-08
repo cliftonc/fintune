@@ -1,6 +1,7 @@
 name = "fintune"
 main= "src/index.tsx"
 compatibility_date = "2023-01-01"
+account_id = "a1ff2aa041f76f9625bfe6f7a9ba2923"
 
 [site]
 bucket = "./assets"
