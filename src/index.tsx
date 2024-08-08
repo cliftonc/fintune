@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { getCookie } from 'hono/cookie'
 import { Layout } from "./components";
 import { serveStatic } from "hono/cloudflare-workers";
 import { loginController } from "./controllers/login";
@@ -17,12 +18,19 @@ app.get("/style.css", serveStatic({ path: "./style.css" }));
 
 app.route("/", loginController);
 
+app.use("*", async (c, next) => {
+  const theme = getCookie(c, 'theme') || 'lofi'
+  console.log('theme', theme)
+  c.theme = theme
+  await next()
+})
+
 app.use("*", authMiddleware);
 app.get("/", async (c) => {
   const session = c.get("session");
   if (!session) {
     return c.html(
-      <Layout username="" currentPage="home">
+      <Layout theme={c.theme} username="" currentPage="home">
         <div class="animate-fade-in text-2xl text-gray alert-error">        
           Welcome!  You need to login to be able to do anything interesting ...
         </div>      
@@ -31,7 +39,7 @@ app.get("/", async (c) => {
   }
 
   return c.html(
-    <Layout username={session.user.githubUsername} currentPage="index">      
+    <Layout theme={c.theme} username={session.user.githubUsername} currentPage="index">      
       <div class="text-center w-full">
         <div class="grid">
           <div class="hero min-h-fit">
@@ -111,7 +119,7 @@ app.route("/calendar", calendarController);
 app.notFound((c) => {
  const session = c.get("session");
  return c.html(
-    <Layout username={session?.user?.githubUsername} currentPage="404">      
+    <Layout theme={c.theme} username={session?.user?.githubUsername} currentPage="404">      
       <div class="grid h-100">
         <div class="hero min-h-fit">
           <div class="hero-content text-center">

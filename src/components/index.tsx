@@ -33,7 +33,7 @@ const ThemeSelector = () => (
       {themes.map((t) => (
         <li>
           <button
-            onClick={`htmx.find('html').setAttribute('data-theme','${t}')`}
+            _={`on click send setTheme(theme:"${t}")`}            
           >
             {t[0].toUpperCase() + t.substring(1)}
           </button>
@@ -97,9 +97,10 @@ const Navbar = (props: { username?: string }) => (
   </div>
 );
 
-export function Layout(props: SiteData) {
+export function Layout(props: SiteData) {  
+  console.log(props)
   return html`<!DOCTYPE html>
-    <html lang="en" data-theme="lofi">
+    <html lang="en" data-theme="${props.theme}">
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -114,7 +115,12 @@ export function Layout(props: SiteData) {
         />
         <link rel="stylesheet" href="/style.css" />
         <script type="text/hyperscript">
-          on clearAlerts set #alerts.innerHTML to ''          
+          on clearAlerts set #alerts.innerHTML to '' end          
+          on setTheme
+            set cookies['theme'] to event.detail.theme
+            htmx.find('html').setAttribute('data-theme', event.detail.theme)
+            log event
+          end
         </script>
       </head>
       <body hx-ext="debug" class="w-full h-screen p-6 mx-auto">

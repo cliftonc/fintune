@@ -130,7 +130,7 @@ app.get("*", async(c) => {
   `)  
 
   return c.html(
-    <Layout username={session.user.githubUsername} currentPage="department">      
+    <Layout theme={c.theme} username={session.user.githubUsername} currentPage="department">      
       <DepartmentPage departments={departmentList.results} />
     </Layout>  
   );

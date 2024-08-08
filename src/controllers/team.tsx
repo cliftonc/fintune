@@ -119,7 +119,7 @@ app.get("*", async(c) => {
     .all();    
 
   return c.html(
-    <Layout username={session.user.githubUsername} currentPage="team">      
+    <Layout theme={c.theme} username={session.user.githubUsername} currentPage="team">      
       <TeamPage teams={teamList} />
     </Layout>  
   );

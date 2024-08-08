@@ -25,7 +25,7 @@ app.get("*", async(c) => {
       .all();
 
   return c.html(
-    <Layout username={session.user.githubUsername} currentPage="todo">      
+    <Layout theme={c.theme} username={session.user.githubUsername} currentPage="todo">      
       <TodoPage todos={todoList} />
     </Layout>
   );

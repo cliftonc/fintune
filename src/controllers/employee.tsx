@@ -128,7 +128,7 @@ app.get("*", async(c) => {
     .all();    
 
   return c.html(
-    <Layout username={session.user.githubUsername} currentPage="employee">      
+    <Layout theme={c.theme} username={session.user.githubUsername} currentPage="employee">      
       <EmployeePage employees={employeeList} />
     </Layout>  
   );
