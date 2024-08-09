@@ -35,6 +35,11 @@ app.use("*", async (c, next) => {
   return await next()
 });
 
+app.get("/clear-index", async (c) => {
+  await c.db.run(sql`delete from search_fts where 1=1`)
+  return c.text("OK")
+})
+
 app.get("/:search", async (c) => {
   const search = c.req.param().search;
   const sanitizedQuery = search.replaceAll('"', '""').replaceAll('*', '') + '*';
@@ -50,16 +55,18 @@ app.get("/:search", async (c) => {
       ORDER BY rank
     `
   const res = await c.db.run(searchSql);
+  const zeroResults = <h1>No results for <b>{search}</b>...</h1>;
 
   return c.html(
     <div class="flex flex-wrap gap-2">
       {res.results.map((r) => (
       <div  _={`on click go to url "/${r.type}/${r.object_key}"`} class="card card-compact bg-base-100 w-96 shadow-xl">
-        <div class="card-body bg-primary">
+        <div class="card-body bg-base-300">
           <h2 class="card-title">{r.search_data}</h2>
           <p>{r.type}</p>          
         </div>
       </div>))}
+      {res.results.length===0 ? zeroResults : ''}
     </div>);  
 });
 
