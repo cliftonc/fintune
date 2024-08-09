@@ -56,6 +56,7 @@ const LeftMenu = (props: { username?: string, currentPage?: string }) => (
           <li><a class={props.currentPage === "index" ? "active" : ""} href="/">Dashboard</a></li>
           <li><a class={props.currentPage === "models" ? "active" : ""} href="/models">Models</a></li>
           <li><a class={props.currentPage === "scenarios" ? "active" : ""} href="/plans">Scenarios</a></li>
+          <li><a class={props.currentPage === "people-team" ? "active" : ""} href="/people-team">Allocation</a></li>
         </ul>
       </li>
       <li>

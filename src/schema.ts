@@ -1,5 +1,5 @@
 import { InferModel, sql } from "drizzle-orm";
-import { blob, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { blob, real, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 /**
  * Calendars
@@ -111,10 +111,13 @@ export const peopleTeams = sqliteTable("people_teams", {
     .references(() => teams.id),
   period: integer("period", { mode: "number" })
     .notNull()
-    .references(() => periods.id)
+    .references(() => periods.id),
+  allocation: real("allocation")
+    .notNull()
+    .default(1.0)
 });
 
-export type Team = InferModel<typeof teams>;
+export type PeopleTeam = InferModel<typeof peopleTeams>;
 
 /**
  * Task List
