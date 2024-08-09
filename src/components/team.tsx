@@ -8,7 +8,7 @@ export function TeamItem(props: Team) {
   return (        
     <tr id={teamId} class="hover" hx-target="this" hx-swap="outerHTML">
       <td class="w-1/2">{props.teams.name}</td>
-      <td class="w-1/2">{props.departments.name}</td>      
+      <td class="w-1/2"><a href={`/department/${props.departments.id}`}>{props.departments.name}</a></td>      
       <td>          
         <button
           class="save btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1"

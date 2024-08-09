@@ -96,8 +96,25 @@ export const teams = sqliteTable("teams", {
     .default(sql`(current_timestamp)`),
 });
 
-export type Department = InferModel<typeof departments>;
+export type Team = InferModel<typeof teams>;
 
+/*
+ * People Teams - Period
+ */
+export const peopleTeams = sqliteTable("people_teams", {
+  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),  
+  employee: integer("employee", { mode: "number" })
+    .notNull()
+    .references(() => employees.id),
+  team: integer("team", { mode: "number" })
+    .notNull()
+    .references(() => teams.id),
+  period: integer("period", { mode: "number" })
+    .notNull()
+    .references(() => periods.id)
+});
+
+export type Team = InferModel<typeof teams>;
 
 /**
  * Task List

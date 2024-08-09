@@ -103,13 +103,37 @@ export function CalendarItemEdit(props: Calendar | null) {
   );
 }
 
+
+export function CalendarView(props: Calendar) {   
+  return <article>
+      <a href="/calendar" class="link">All calendars</a> | <span>{props.name}</span>                
+      <div class="divider"></div>
+      <h1 class="text-3xl">Details</h1>
+      <table id="teams" class="flex-none mt-4 bg-base-200 hover table table-zebra table-sm w-full text-left" hx-swap="outerHTML" hx-target="closest tr">
+        <thead>
+          <th>Calendar Name</th>
+          <th>Type</th>
+          <th>First Period</th>
+          <th></th>
+        </thead>
+        <tbody>        
+          <CalendarItem {...props} />
+        </tbody>      
+      </table>
+      <div class="divider"></div>      
+      <h1 class="text-3xl">Periods</h1>
+      <div hx-get={`/period/calendar/${props.id}`} hx-trigger="load">
+      </div>
+    </article>
+}
+
 export function CalendarPage(props: { calendars: Calendar[] }) {
   return (
     <>    
       <div class="w-1/2 text-left">
         <button hx-get="/calendar/create" hx-target="#calendars tbody" hx-swap="beforeend" class="btn text-right mt-5 join-item">Add Calendar</button>      
       </div>
-      <table id="calendars" class="table table-zebra table-sm w-full" hx-swap="outerHTML" hx-target="closest tr">
+      <table id="calendars" class="table table-zebra table-sm w-full text-left" hx-swap="outerHTML" hx-target="closest tr">
         <thead>
           <th>Calendar Name</th>
           <th>Type</th>

@@ -4,12 +4,13 @@ import { z } from "zod";
 import { drizzle } from "drizzle-orm/d1";
 import { eq, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/sqlite-core";
-import { CalendarPage, CalendarItem, CalendarItemEdit } from "../components/calendar";
+import { CalendarPage, CalendarView, CalendarItem, CalendarItemEdit } from "../components/calendar";
 import { Layout } from "../components";
 import { calendars, user } from "../schema";
 import { checkAuthMiddleware } from "../lucia";
 import { Session } from "lucia";
 import { errorHandler, zodErrorHandler, successHandler } from "../utils/alerts";
+import { index, removeIndex } from './search';
 
 const app = new Hono<AuthEnv>();
 
@@ -35,6 +36,14 @@ app.post(
       .values({ ...c.req.valid("form"), createdBy: session.user.userId })
       .returning()
       .get();      
+
+    await index(drizzle(c.env.DB), {
+      object_key: newCalendar.id,
+      type: 'calendar',
+      org: 'infinitas',
+      search_data: `${newCalendar.name}`
+    });
+
     c.header('HX-Trigger','clearAlerts');
     return c.html(
       <>
@@ -61,6 +70,14 @@ app.put(
       .where(eq(calendars.id, id))
       .returning()
       .get();
+
+    await index(drizzle(c.env.DB), {
+      object_key: updatedCalendar.id,
+      type: 'calendar',
+      org: 'infinitas',
+      search_data: `${updatedCalendar.name}`
+    });
+
     c.header('HX-Trigger','clearAlerts');
     return c.html(
       <>
@@ -75,6 +92,7 @@ app.delete("/delete/:id{[0-9]+}", async (c) => {
   const db = drizzle(c.env.DB);  
   try {
     await drizzle(c.env.DB).delete(calendars).where(eq(calendars.id, id)).run();
+    await removeIndex(drizzle(c.env.DB), {object_key: id, type: 'calendar'})
   } catch(ex) {
     const calendar = await drizzle(c.env.DB).select().from(calendars).where(eq(calendars.id, id));  
     return c.html(
@@ -83,6 +101,7 @@ app.delete("/delete/:id{[0-9]+}", async (c) => {
         {errorHandler('Calendar has periods!', 'Cannot delete a calendar that has periods attached to it :D')}
       </>)
   }
+
   return c.html(successHandler('Deleted', `Calendar ${id} deleted`));
 });
 
@@ -106,6 +125,24 @@ app.get("/item/:id{[0-9]+}", async (c) => {
     .from(calendars)    
     .where(eq(calendars.id, id));  
   return c.html(<CalendarItem {...calendar[0]} />);  
+});
+
+
+app.get("/:id{[0-9]+}", async (c) => {
+  const session = c.get("session");
+  const id = parseInt(c.req.param().id);
+  const db = drizzle(c.env.DB);  
+  const createdByUser = alias(user, 'createdByUser')
+  const calendar = await drizzle(c.env.DB)
+    .select()
+    .from(calendars)    
+    .where(eq(calendars.id, id));  
+  
+  return c.html(
+    <Layout theme={c.theme} username={session.user.githubUsername} currentPage="calendar">      
+      <CalendarView {...calendar[0]} />
+    </Layout>  
+  );
 });
 
 app.get("*", async(c) => {
