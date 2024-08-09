@@ -17,7 +17,16 @@ export function CalendarItem(props: Calendar) {
         > 
           <div class="i-mdi-edit text-xl"></div>
         </button>
-      </td><td>
+      </td>
+      <td class="w-8">
+        <button
+          class="view btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1"
+          _={`on click go to url "/calendar/${props.id}"`}
+        >
+          <div class="i-mdi-eye text-xl"></div>
+        </button>          
+      </td>         
+      <td>
         <button
           class="delete btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1"
           hx-delete={`/calendar/delete/${props.id}`}

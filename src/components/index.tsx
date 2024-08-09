@@ -35,8 +35,9 @@ const LoginBar = (props: { username?: string }) => (
   <div class="flex-none gap-0">
     {props.username ? (            
       <a class="normal-case" href="/logout">
-        Logout
-      </a>              
+        Logout<br/>
+        <small class="text-info">{props.username}</small>
+      </a>                
     ) : (
       <a class="btn normal-case" href="/login/github">
         Sign in with GitHub
@@ -83,9 +84,8 @@ const LeftMenu = (props: { username?: string, currentPage?: string }) => (
 )
 
 const Body = (props: SiteData) => {  
-  return <body hx-ext="debug" class="h-screen">
-    <div>          
-      <div class="min-w-screen flex flex-col">
+  return <body hx-ext="debug">          
+      <div class="h-screen min-w-screen flex flex-col">
         <div class="flex flex-grid p-4">                            
           <div class="flex flex-row">
             <button _="on click toggle .hidden on #navbar-default" data-collapse-toggle="navbar-default" type="button" class="inline-flex mr-5 items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
@@ -136,7 +136,6 @@ const Body = (props: SiteData) => {
           </div>
         </div>
       </div>
-    </div>                     
   </body>
 }
 

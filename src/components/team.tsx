@@ -17,7 +17,16 @@ export function TeamItem(props: Team) {
         > 
           <div class="i-mdi-edit text-xl"></div>
         </button>
-      </td><td>
+      </td>  
+      <td class="w-8">
+        <button
+          class="view btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1"
+          _={`on click go to url "/team/${props.teams.id}"`}
+        >
+          <div class="i-mdi-eye text-xl"></div>
+        </button>          
+      </td>
+      <td>
         <button
           class="delete btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1"
           hx-delete={`/team/delete/${props.teams.id}`}
@@ -25,8 +34,7 @@ export function TeamItem(props: Team) {
           <div class="i-mdi-trash text-xl"></div>
         </button>          
       </td>      
-    </tr>    
-  );
+    </tr>);
 }
 
 export function TeamItemEdit(props: Team | null) {     
@@ -73,6 +81,26 @@ export function TeamItemEdit(props: Team | null) {
       <td>{cancelButton}</td>
     </tr>        
   );
+}
+
+
+export function TeamView(props: Team) { 
+  const teamId = `team-${props.id}`;
+  return <article>
+      <a href="/team" class="link">All teams</a> | <span>{props.teams.name}</span>                
+      <div class="divider"></div>
+      <h1 class="text-3xl">Details</h1>
+      <table id="teams" class="flex-none mt-4 bg-base-200 hover table table-zebra table-sm w-full text-left" hx-swap="outerHTML" hx-target="closest tr">
+        <thead>
+            <th>Name</th>
+            <th>Department</th>                    
+            <th></th>
+        </thead>
+        <tbody>        
+          <TeamItem {...props} />
+        </tbody>      
+      </table>      
+    </article>
 }
 
 export function TeamPage(props: { teams: Team[] }) {

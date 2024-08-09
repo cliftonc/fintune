@@ -4,7 +4,7 @@ import { z } from "zod";
 import { drizzle } from "drizzle-orm/d1";
 import { eq, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/sqlite-core";
-import { DepartmentPage, DepartmentItem, DepartmentItemEdit } from "../components/department";
+import { DepartmentPage, DepartmentView, DepartmentItem, DepartmentItemEdit } from "../components/department";
 import { Layout } from "../components";
 import { departments, teams, user } from "../schema";
 import { checkAuthMiddleware } from "../lucia";
@@ -130,6 +130,18 @@ app.get("/item/:id{[0-9]+}", async (c) => {
   const db = c.db;   
   const department = await db.run(deptSql(id))
   return c.html(<DepartmentItem {...department.results[0]} />);  
+});
+
+app.get("/:id{[0-9]+}", async (c) => {
+  const session = c.get("session");
+  const id = parseInt(c.req.param().id);
+  const db = c.db;   
+  const department = await db.run(deptSql(id))
+  return c.html(
+    <Layout theme={c.theme} username={session.user.githubUsername} currentPage="department">      
+      <DepartmentView {...department.results[0]} />
+    </Layout>  
+  );  
 });
 
 app.get("*", async(c) => {

@@ -4,7 +4,7 @@ import { z } from "zod";
 import { drizzle } from "drizzle-orm/d1";
 import { eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/sqlite-core";
-import { TeamPage, TeamItem, TeamItemEdit } from "../components/team";
+import { TeamPage, TeamItem, TeamView, TeamItemEdit } from "../components/team";
 import { Layout } from "../components";
 import { teams, departments, user } from "../schema";
 import { checkAuthMiddleware } from "../lucia";
@@ -125,6 +125,23 @@ app.get("/item/:id{[0-9]+}", async (c) => {
   return c.html(<TeamItem {...team[0]} />);  
 });
 
+app.get("/:id{[0-9]+}", async (c) => {
+  const session = c.get("session");
+  const id = parseInt(c.req.param().id);
+  const db = drizzle(c.env.DB);  
+  const createdByUser = alias(user, 'createdByUser')
+  const team = await drizzle(c.env.DB)
+    .select()
+    .from(teams)    
+    .leftJoin(departments, eq(teams.department, departments.id))
+    .where(eq(teams.id, id));
+
+  return c.html(
+    <Layout theme={c.theme} username={session.user.githubUsername} currentPage="team">      
+      <TeamView {...team[0]} />
+    </Layout >)
+});
+
 app.get("*", async(c) => {
   const session = c.get("session");
   const createdByUser = alias(user, 'createdByUser')
@@ -137,8 +154,7 @@ app.get("*", async(c) => {
   return c.html(
     <Layout theme={c.theme} username={session.user.githubUsername} currentPage="team">      
       <TeamPage teams={teamList} />
-    </Layout>  
-  );
+    </Layout>);
 })
 
 export { app as teamController };
