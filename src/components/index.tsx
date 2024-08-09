@@ -82,9 +82,8 @@ const LeftMenu = (props: { username?: string, currentPage?: string }) => (
   </ul>
 )
 
-const Body = (props: SiteData) => {
-  console.log(props)
-  return <body hx-ext="debug">
+const Body = (props: SiteData) => {  
+  return <body hx-ext="debug" class="h-screen">
     <div>          
       <div class="min-w-screen flex flex-col">
         <div class="flex flex-grid p-4">                            
@@ -96,11 +95,11 @@ const Body = (props: SiteData) => {
                 </svg>
             </button>
             <div>
-              <h1 class="text-3xl font-bold"><a href="/">fintune</a></h1>                          
+              <h1 class="text-4xl font-bold"><a href="/">fintune</a></h1>                          
             </div>  
-            <div class="ml-5 mt-1">
-              <label class="input input-sm flex items-center">
-                <input id="search-input" type="text" class="input grow bg-none" autocomplete="off" placeholder="Search" 
+            <div class="ml-10">
+              <label class="flex input  items-center">
+                <input id="search-input" type="text" class="w-30 bg-none" autocomplete="off" placeholder="Search" 
                   _={`on keyup debounced at 200ms
                      if the event's key is 'Escape'
                        set my value to ''
@@ -118,7 +117,7 @@ const Body = (props: SiteData) => {
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 16 16"
                   fill="currentColor"
-                  class="h-4 w-4 opacity-70">
+                  class="h-4 w-4 p-0 opacity-70">
                   <path
                     fill-rule="evenodd"
                     d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
@@ -129,9 +128,9 @@ const Body = (props: SiteData) => {
           </div>
         </div>
         <div class="flex flex-row">
-          <div class=" bg-base-200 md:w-content whitespace-nowrap hidden md:block sm:bg-grey ml-2 mr-2 pl-0 pr-4 rounded-box" id="navbar-default">          
+          <div class="bg-base-200 md:w-content whitespace-nowrap hidden md:block sm:bg-grey ml-2 mr-2 pl-0 pr-4 rounded-box" id="navbar-default">          
               <LeftMenu {...{currentPage: props.currentPage, username: props.username}}/>
-          </div>       
+          </div>   
           <div id="main-content" class="w-full p-2">
             {props.children}
           </div>

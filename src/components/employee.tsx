@@ -5,9 +5,10 @@ import { themes } from "../themes";
 export function EmployeeView(props: Employee) { 
   const empId = `employee-${props.id}`;
   return <article>
-      <a href="/employee" class="link">All employees</a> | <span>{props.name}</span>          
-      <h1 class="text-2xl">{props.name}</h1>
-      <table id="employees" class="flex-none hover table table-zebra table-sm w-full text-left" hx-swap="outerHTML" hx-target="closest tr">
+      <a href="/employee" class="link">All employees</a> | <span>{props.name}</span>                
+      <div class="divider"></div>
+      <h1 class="text-3xl">Details</h1>
+      <table id="employees" class="flex-none mt-4 bg-base-200 hover table table-zebra table-sm w-full text-left" hx-swap="outerHTML" hx-target="closest tr">
         <thead>
             <th>Name</th>
             <th>ID</th>
@@ -19,7 +20,8 @@ export function EmployeeView(props: Employee) {
         <tbody>        
           <EmployeeItem {...props} />
         </tbody>      
-      </table>
+      </table>      
+      <h1 class="mt-5 text-3xl">Teams</h1>
     </article>
 }
 
@@ -27,12 +29,12 @@ export function EmployeeItem(props: Employee) {
   const empId = `employee-${props.id}`;
   return (        
     <tr id={empId} class="hover" hx-target="this" hx-swap="outerHTML" >
-      <td class="w-1/4">{props.name}</td>      
-      <td class="w-1/4">{props.employeeId}</td>
-      <td class="w-1/8">{props.active ? 'Yes' : 'No'}</td>
+      <td>{props.name}</td>      
+      <td>{props.employeeId}</td>
+      <td>{props.active ? 'Yes' : 'No'}</td>
       <td class="w-1/6">{props.started}</td>
       <td class="w-1/6">{props.finished}</td>            
-      <td class="w-1">          
+      <td class="w-8">          
         <button
           class="save btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1"
           hx-trigger="click"
@@ -41,7 +43,7 @@ export function EmployeeItem(props: Employee) {
           <div class="i-mdi-edit text-xl"></div>
         </button>
       </td>
-      <td>
+      <td class="w-8">
         <button
           class="view btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1"
           _={`on click go to url "/employee/${props.id}"`}
@@ -49,7 +51,7 @@ export function EmployeeItem(props: Employee) {
           <div class="i-mdi-eye text-xl"></div>
         </button>          
       </td>   
-      <td>
+      <td class="w-8">
         <button
           class="delete btn btn-ghost btn-circle w-8 h-8 min-h-0 -m-1"
           hx-delete={`/employee/delete/${props.id}`}
@@ -87,19 +89,19 @@ export function EmployeeItemEdit(props: Employee) {
   }
   return (         
     <tr id={empId} class="hover p-0 border-1" hx-target="this" hx-swap="outerHTML">     
-      <td class="w-1/4">
+      <td>
         <input name="name" maxlength={40} required type="text"
           class="input join-item input-bordered w-full"
           autocomplete="off" autofocus value={props.name}
         />
       </td>
-      <td class="w-1/4">
+      <td>
         <input name="employeeId" maxlength={20} required type="text"
           class="input join-item input-bordered w-full"
           autocomplete="off" value={props.employeeId}
         />
       </td>
-      <td class="w-1/8">        
+      <td>        
         <input
           class="checkbox mr-1"
           type="checkbox"
@@ -119,19 +121,19 @@ export function EmployeeItemEdit(props: Employee) {
           autocomplete="off" value={props.finished || ''}
         />
       </td>
-      <td>{saveButton}</td>
-      <td>{cancelButton}</td> 
+      <td class="w-8">{saveButton}</td>
+      <td class="w-8">{cancelButton}</td> 
     </tr>        
   );
 }
 
 export function EmployeePage(props: { employees: Employee[] }) {
   return (
-    <>    
+    <div class="overflow-x-auto">    
       <ul class="menu menu-horizontal bg-base-200 rounded-box">
         <li><a hx-get="/employee/create" hx-target="#employees tbody" hx-swap="beforeend">Add employee</a></li>                                                    
       </ul>
-      <table id="employees" class="flex-none hover table table-zebra table-sm w-full text-left" hx-swap="outerHTML" hx-target="closest tr">
+      <table id="employees" class="table table-auto table-zebra hover table-sm w-full min-w-200 text-left" hx-swap="outerHTML" hx-target="closest tr">
         <thead>
           <th>Name</th>
           <th>ID</th>
@@ -147,6 +149,6 @@ export function EmployeePage(props: { employees: Employee[] }) {
         </tbody>
       </table>
       <div id="alerts"></div>  
-    </>
+    </div>
   );
 }
